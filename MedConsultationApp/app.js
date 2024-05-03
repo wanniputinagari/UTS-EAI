@@ -59,6 +59,23 @@ app.get('/patients', (req, res) => {
     });
 });
 
+app.get('/detailpatient/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = 'SELECT * FROM patients WHERE patient_id = ?';
+
+    connection.query(sql, [id], (error, results) => {
+        if (error) {
+            console.error('Error executing MySQL query:', error);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Data not found' });
+        }
+
+        res.json(results[0]); // Return the first result (assuming ID is unique)
+    });
+});
 
 // Get a single consultation by ID
 app.get('/detailconsultation/:id', (req, res) => {
